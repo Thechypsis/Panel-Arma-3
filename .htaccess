@@ -1,0 +1,32 @@
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
+
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresDefault "access plus 1 day"
+ExpiresByType image/x-icon "access plus 7 day"
+ExpiresByType image/gif "access plus 7 day"
+ExpiresByType image/png "access plus 7 day"
+ExpiresByType image/jpeg "access plus 7 day"
+ExpiresByType text/css "access plus 1 day"
+ExpiresByType application/javascript "access plus 1 day"
+</IfModule>
+<IfModule mod_deflate.c>
+    #The following line is enough for .js and .css
+    AddOutputFilter DEFLATE js css
+
+    #The following line also enables compression by file content type, for the following list of Content-Type:s
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml
+
+    #The following lines are to avoid bugs with some browsers
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+</IfModule>
+<IfModule mod_headers.c>
+Header set Content-Security-Policy "script-src 'self' https://www.google.com"
+Header always set X-FRAME-OPTIONS "DENY"
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-XSS-Protection "1; mode=block"
+</IfModule>
